@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Press Start 2P', cursive;
+            background-color: black;
+            color: white;
+        }
+        .screen {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .game_play {
+            width: 50%;
+            height: 30vh;
+            margin-bottom: 2%;
+            font-size: 24px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            background-image: url(images/wall_paper.png);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 10px;
+        }
+        .computer_move, .player_move {
+            width: 130px;
+            height: 130px;
+            margin: 80px;
+            border-radius: 5px;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .characters {
+            width: 95%;
+            height: 45vh;
+            margin-top: 1%;
+            display: flex;
+            flex-direction: column;
+        }
+        .characters_1, .characters_2 {
+            width: 100%;
+            height: 22vh;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .char {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            cursor: pointer;
+        }
+        .char:hover {
+            transform: translateZ(40px) scale(1.2);
+        }
+        /* Style for result div */
+        .result {
+            margin-left: 20px;
+            padding: 10px;
+            font-size: 20px;
+            background-color: black;
+            color: #0f0;
+            border-radius: 5px;
+        }
+        #score {
+            margin-top: 20px;
+            font-size: 18px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen">
+        <div class="game_play">
+            <div class="computer_move"></div>
+            <div class="player_move"></div>
+        </div>
+        <div id="result" class="result"></div>
+        <div id="score">
+            <span>Wins: <span id="wins">0</span></span> 
+            <span>Losses: <span id="losses">0</span></span>
+            
+        </div>
+        <div class="characters">
+            <div class="characters_1">
+                <div class="char" style="background-image: url(images/HogRiderCard.webp);" onclick="selectCard('HogRiderCard.webp')"></div>
+                <div class="char" style="background-image: url(images/MiniPEKKACard.webp);" onclick="selectCard('MiniPEKKACard.webp')"></div>
+                <div class="char" style="background-image: url(images/GiantCard.webp);" onclick="selectCard('GiantCard.webp')"></div>
+                <div class="char" style="background-image: url(images/SkeletonArmyCard.webp);" onclick="selectCard('SkeletonArmyCard.webp')"></div>
+                <div class="char" style="background-image: url(images/WizardCard.webp);" onclick="selectCard('WizardCard.webp')"></div>
+                <div class="char" style="background-image: url(images/PrinceCard.webp);" onclick="selectCard('PrinceCard.webp')"></div>
+                <div class="char" style="background-image: url(images/BabyDragonCard.webp);" onclick="selectCard('BabyDragonCard.webp')"></div>
+                <div class="char" style="background-image: url(images/MusketeerCard.webp);" onclick="selectCard('MusketeerCard.webp')"></div>
+            </div>
+            <div class="characters_2">
+                <div class="char" style="background-image: url(images/SparkyCard.webp);" onclick="selectCard('SparkyCard.webp')"></div>
+                <div class="char" style="background-image: url(images/DartGoblinCard.webp);" onclick="selectCard('DartGoblinCard.webp')"></div>
+                <div class="char" style="background-image: url(images/FireballCard.webp);" onclick="selectCard('FireballCard.webp')"></div>
+                <div class="char" style="background-image: url(images/InfernoDragonCard.webp);" onclick="selectCard('InfernoDragonCard.webp')"></div>
+                <div class="char" style="background-image: url(images/MegaKnightCard.webp);" onclick="selectCard('MegaKnightCard.webp')"></div>
+                <div class="char" style="background-image: url(images/MinerCard.webp);" onclick="selectCard('MinerCard.webp')"></div>
+                <div class="char" style="background-image: url(images/RoyalGiantCard.webp);" onclick="selectCard('RoyalGiantCard.webp')"></div>
+                <div class="char" style="background-image: url(images/WitchCard.webp);" onclick="selectCard('WitchCard.webp')"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const characters = [
+    'HogRiderCard.webp',
+    'MiniPEKKACard.webp',
+    'GiantCard.webp',
+    'SkeletonArmyCard.webp',
+    'WizardCard.webp',
+    'PrinceCard.webp',
+    'BabyDragonCard.webp',
+    'MusketeerCard.webp',
+    'SparkyCard.webp',
+    'DartGoblinCard.webp',
+    'FireballCard.webp',
+    'InfernoDragonCard.webp',
+    'MegaKnightCard.webp',
+    'MinerCard.webp',
+    'RoyalGiantCard.webp',
+    'WitchCard.webp'
+];
+
+let computerCard = '';
+let wins = 0;  // Initialize wins counter
+let losses = 0; // Initialize losses counter
+
+function selectCard(cardImage) {
+    const playerMoveDiv = document.querySelector('.player_move');
+    playerMoveDiv.style.backgroundImage = `url(images/${cardImage})`;
+    playerMoveDiv.style.backgroundSize = '100% 100%';
+
+    // Call checkResult only after setting the player's card
+    setTimeout(() => {
+        checkResult(cardImage); // Check result after player makes a move
+    }, 1200); // Small delay to ensure the player move is displayed
+}
+
+
+function randomComputerCard() {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    computerCard = characters[randomIndex];
+    const computerMoveDiv = document.querySelector('.computer_move');
+    computerMoveDiv.style.backgroundImage = `url(images/${computerCard})`;
+    computerMoveDiv.style.backgroundSize = '100% 100%';
+}
+
+function updateScore() {
+    document.getElementById('wins').textContent = wins; // Update wins count display
+    document.getElementById('losses').textContent = losses; // Update losses count display
+}
+
+function checkResult(playerCard) {
+    const resultDiv = document.getElementById('result');
+
+    // Winning conditions...
+    if (computerCard === 'MegaKnightCard.webp' && (playerCard === 'PrinceCard.webp' || playerCard === 'InfernoDragonCard.webp' || playerCard === 'SparkyCard.webp')) {
+        resultDiv.textContent = 'You Won!';
+        resultDiv.style.color = 'green';
+        wins++; // Increment wins counter
+        resetMoves(); // Reset moves after win
+    } 
+    else if (computerCard === 'PrinceCard.webp' && (playerCard === 'SkeletonArmyCard.webp' || playerCard === 'MiniPEKKACard.webp' || playerCard === 'MegaKnightCard.webp')) {
+        resultDiv.textContent = 'You Won!';
+        resultDiv.style.color = 'green';
+        wins++; // Increment wins counter
+        resetMoves(); // Reset moves after win
+    }
+    else if (computerCard === 'SkeletonArmyCard.webp' && (playerCard === 'BabyDragonCard.webp' || playerCard === 'WizardCard.webp' || playerCard === 'MegaKnightCard.webp' || playerCard === 'FireballCard.webp')) {
+        resultDiv.textContent = 'You Won!';
+        resultDiv.style.color = 'green';
+        wins++; // Increment wins counter
+        resetMoves(); // Reset moves after win
+    } 
+    else if (computerCard === 'HogRiderCard.webp' && playerCard === 'SkeletonArmyCard.webp') {
+        resultDiv.textContent = 'You Won!';
+        resultDiv.style.color = 'green';
+        wins++; // Increment wins counter
+        resetMoves(); // Reset moves after win
+    } 
+    else if (computerCard === 'MiniPEKKACard.webp' && (playerCard === 'SkeletonArmyCard.webp' || playerCard === 'MegaKnightCard.webp')) {
+        resultDiv.textContent = 'You Won!';
+        resultDiv.style.color = 'green';
+        wins++; // Increment wins counter
+        resetMoves(); // Reset moves after win
+    }
+    else if (computerCard === 'GiantCard.webp' && (playerCard === 'SkeletonArmyCard.webp' || playerCard === 'MegaKnightCard.webp' || playerCard === 'PrinceCard.webp')) {
+        resultDiv.textContent = 'You Won!';
+        resultDiv.style.color = 'green';
+        wins++; // Increment wins counter
+        resetMoves(); // Reset moves after win
+    }
+    else if (computerCard === 'WizardCard.webp' && (playerCard === 'MiniPEKKACard.webp' || playerCard === 'MegaKnightCard.webp' || playerCard === 'PrinceCard.webp' || playerCard === 'SparkyCard.webp')) {
+        resultDiv.textContent = 'You Won!';
+        resultDiv.style.color = 'green';
+        wins++; // Increment wins counter
+        resetMoves(); // Reset moves after win
+    }
+    else if (computerCard === 'BabyDragonCard.webp' && (playerCard === 'FireballCard.webp' || playerCard === 'InfernoDragonCard.webp')) {
+        resultDiv.textContent = 'You Won!';
+        resultDiv.style.color = 'green';
+        wins++; // Increment wins counter
+        resetMoves(); // Reset moves after win
+    } 
+    else if (computerCard === playerCard) {
+        resultDiv.textContent = 'You chose the Same Character!';
+        resultDiv.style.color = 'orange'; // Change color for a draw
+    } 
+    else {
+        resultDiv.textContent = 'You Lost!';
+        resultDiv.style.color = 'red';
+        losses++; // Increment losses counter
+        resetMoves(); // Reset moves after loss
+    }
+
+    updateScore(); // Call to update the displayed score
+}
+
+function resetMoves() {
+    const playerMoveDiv = document.querySelector('.player_move');
+    const computerMoveDiv = document.querySelector('.computer_move');
+
+    // Clear the moves
+    playerMoveDiv.style.backgroundImage = '';
+    computerMoveDiv.style.backgroundImage = '';
+
+    // Get a new computer card
+    randomComputerCard();
+}
+
+// Call the function to set a random character when the page loads
+window.onload = randomComputerCard;
+
+    </script>
+</body>
+</html>
